@@ -1,0 +1,21 @@
+@keyframes hue {
+    from {
+      filter: hue-rotate(0deg);
+    }
+    to {
+      filter: hue-rotate(-360deg);
+    }
+  }
+  
+  .animate-gradient {
+    color: #f35626;
+    background-image: linear-gradient(192deg, #f35626, #feab3a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: hue 4s infinite linear;
+    font-feature-settings: "kern";
+    overflow-wrap: break-word;
+    text-rendering: optimizelegibility;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
