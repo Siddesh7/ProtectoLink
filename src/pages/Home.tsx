@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { SafeEventEmitterProvider, UserInfo } from "@web3auth/base";
-import { ethers, Contract } from "ethers";
+import {useEffect, useState} from "react";
+import {SafeEventEmitterProvider, UserInfo} from "@web3auth/base";
+import {ethers, Contract} from "ethers";
 import {
   SIPFactoryABI,
   SocketFactoryABI,
@@ -10,8 +10,8 @@ import {
   insuranceDeployerABI,
   insuranceBond,
 } from "../constants";
-import { Loading } from "../components/Loading";
-import { getChainConfig } from "../utils";
+import {Loading} from "../components/Loading";
+import {getChainConfig} from "../utils";
 import {
   GaslessOnboarding,
   GaslessWalletConfig,
@@ -22,7 +22,7 @@ import "../App.css";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import SIPCard from "../components/SIP";
-import { calculateFlowRate } from "../utils/createFlow";
+import {calculateFlowRate} from "../utils/createFlow";
 import TokenBuyForm from "../components/socket";
 import SocketHistory from "../components/socketHistory";
 import PortfolioRebalancer from "../components/portfolioRebalancer";
@@ -88,13 +88,12 @@ function Home() {
       cfaABI,
       new ethers.providers.Web3Provider(web3AuthProvider!).getSigner()
     );
-    let { data } =
-      await cfaV3.populateTransaction.updateFlowOperatorPermissions(
-        fdaixaddress,
-        contractsConfig?.SIPFactory,
-        "7",
-        "2178321882175756675765"
-      );
+    let {data} = await cfaV3.populateTransaction.updateFlowOperatorPermissions(
+      fdaixaddress,
+      contractsConfig?.SIPFactory,
+      "7",
+      "2178321882175756675765"
+    );
     if (!data) {
       return;
     }
@@ -102,10 +101,7 @@ function Home() {
       return;
     }
     try {
-      const { taskId } = await smartWallet.sponsorTransaction(
-        CFAv3address,
-        data
-      );
+      const {taskId} = await smartWallet.sponsorTransaction(CFAv3address, data);
       console.log(`https://api.gelato.digital/tasks/status/${taskId}`);
     } catch (error) {
       console.log("error");
@@ -124,13 +120,12 @@ function Home() {
       cfaABI,
       new ethers.providers.Web3Provider(web3AuthProvider!).getSigner()
     );
-    let { data } =
-      await cfaV3.populateTransaction.updateFlowOperatorPermissions(
-        fdaixaddress,
-        spender,
-        "7",
-        "2178321882175756675765"
-      );
+    let {data} = await cfaV3.populateTransaction.updateFlowOperatorPermissions(
+      fdaixaddress,
+      spender,
+      "7",
+      "2178321882175756675765"
+    );
     if (!data) {
       return;
     }
@@ -138,10 +133,7 @@ function Home() {
       return;
     }
     try {
-      const { taskId } = await smartWallet.sponsorTransaction(
-        CFAv3address,
-        data
-      );
+      const {taskId} = await smartWallet.sponsorTransaction(CFAv3address, data);
       console.log(`https://api.gelato.digital/tasks/status/${taskId}`);
     } catch (error) {
       console.log("error");
@@ -187,7 +179,7 @@ function Home() {
     const erc20 = new Contract(tokenAddress, abi, signer);
 
     try {
-      const { data } = await erc20.populateTransaction.approve(
+      const {data} = await erc20.populateTransaction.approve(
         contractAddress,
         "217832144882175756675765"
       );
@@ -200,10 +192,7 @@ function Home() {
         return;
       }
 
-      const { taskId } = await smartWallet.sponsorTransaction(
-        tokenAddress,
-        data
-      );
+      const {taskId} = await smartWallet.sponsorTransaction(tokenAddress, data);
       console.log(`https://api.gelato.digital/tasks/status/${taskId}`);
     } catch (error) {
       console.log("error");
@@ -235,7 +224,7 @@ function Home() {
     const contract = new Contract(contractAddress, abi, signer);
 
     try {
-      const { data } = await contract.populateTransaction.depositTokens();
+      const {data} = await contract.populateTransaction.depositTokens();
 
       if (!data) {
         return;
@@ -245,7 +234,7 @@ function Home() {
         return;
       }
 
-      const { taskId } = await smartWallet.sponsorTransaction(
+      const {taskId} = await smartWallet.sponsorTransaction(
         contractAddress,
         data
       );
@@ -274,7 +263,7 @@ function Home() {
     const contract = new Contract(contractAddress, abi, signer);
 
     try {
-      const { data } = await contract.populateTransaction.withdrawTokens();
+      const {data} = await contract.populateTransaction.withdrawTokens();
 
       if (!data) {
         return;
@@ -284,7 +273,7 @@ function Home() {
         return;
       }
 
-      const { taskId } = await smartWallet.sponsorTransaction(
+      const {taskId} = await smartWallet.sponsorTransaction(
         contractAddress,
         data
       );
@@ -315,7 +304,7 @@ function Home() {
     const contract = new Contract(contractAddress, abi, signer);
 
     try {
-      const { data } = await contract.populateTransaction.buyInsurance();
+      const {data} = await contract.populateTransaction.buyInsurance();
 
       if (!data) {
         return;
@@ -325,7 +314,7 @@ function Home() {
         return;
       }
 
-      const { taskId } = await smartWallet.sponsorTransaction(
+      const {taskId} = await smartWallet.sponsorTransaction(
         contractAddress,
         data
       );
@@ -375,7 +364,7 @@ function Home() {
       const erc20 = new Contract(token, abi, signer);
 
       try {
-        const { data } = await erc20.populateTransaction.approve(
+        const {data} = await erc20.populateTransaction.approve(
           contractAddress,
           "217832144882175756675765"
         );
@@ -388,8 +377,9 @@ function Home() {
           return;
         }
 
-        const { taskId } = await smartWallet.sponsorTransaction(token, data);
+        const {taskId} = await smartWallet.sponsorTransaction(token, data);
         console.log(`https://api.gelato.digital/tasks/status/${taskId}`);
+        await new Promise((resolve) => setTimeout(resolve, 10000));
       } catch (error) {
         console.log("error");
       }
@@ -408,7 +398,7 @@ function Home() {
 
     const calculatedFlowRate = calculateFlowRate(numberOfTokens);
     console.log(calculatedFlowRate);
-    let { data } = await SIPFactoryContract!.populateTransaction.createSIP(
+    let {data} = await SIPFactoryContract!.populateTransaction.createSIP(
       sellToken,
       buyToken,
       String(frequency),
@@ -422,7 +412,7 @@ function Home() {
       return;
     }
     try {
-      const { taskId } = await smartWallet.sponsorTransaction(
+      const {taskId} = await smartWallet.sponsorTransaction(
         contractsConfig?.SIPFactory!,
         data
       );
@@ -442,7 +432,7 @@ function Home() {
       return;
     }
 
-    let { data } =
+    let {data} =
       await rebalancerFactory!.populateTransaction.createPortfolioRebalancer(
         tokenAddresses,
         targetWeights,
@@ -457,7 +447,7 @@ function Home() {
       return;
     }
     try {
-      const { taskId } = await smartWallet.sponsorTransaction(
+      const {taskId} = await smartWallet.sponsorTransaction(
         contractsConfig?.RebalancerFactory!,
         data
       );
@@ -475,7 +465,7 @@ function Home() {
       return;
     }
 
-    let { data } = await socketFactory!.populateTransaction.createTask(
+    let {data} = await socketFactory!.populateTransaction.createTask(
       sellToken,
       buyToken,
       numberOfTokens
@@ -487,7 +477,7 @@ function Home() {
       return;
     }
     try {
-      const { taskId } = await smartWallet.sponsorTransaction(
+      const {taskId} = await smartWallet.sponsorTransaction(
         contractsConfig?.SocketFactory!,
         data
       );
@@ -508,7 +498,7 @@ function Home() {
       return;
     }
 
-    let { data } = await insuranceFactory!.populateTransaction.createInsurance(
+    let {data} = await insuranceFactory!.populateTransaction.createInsurance(
       threshold,
       superToken,
       assetInsured,
@@ -523,7 +513,7 @@ function Home() {
       return;
     }
     try {
-      const { taskId } = await smartWallet.sponsorTransaction(
+      const {taskId} = await smartWallet.sponsorTransaction(
         contractsConfig?.InsuranceDeployer!,
         data
       );
@@ -543,7 +533,7 @@ function Home() {
       new ethers.providers.Web3Provider(web3AuthProvider!).getSigner()
     );
 
-    let { data } =
+    let {data} =
       await insuranceBondEthers!.populateTransaction.depositInsuredAmount();
     if (!data) {
       return;
@@ -552,7 +542,7 @@ function Home() {
       return;
     }
     try {
-      const { taskId } = await smartWallet.sponsorTransaction(address, data);
+      const {taskId} = await smartWallet.sponsorTransaction(address, data);
       console.log(`https://api.gelato.digital/tasks/status/${taskId}`);
     } catch (error) {
       console.log("error");
@@ -575,8 +565,8 @@ function Home() {
           rpcUrl,
           name,
         } = getChainConfig(chainIdParam);
-        setCurrentChain({ name, id: chainId });
-        const smartWalletConfig: GaslessWalletConfig = { apiKey };
+        setCurrentChain({name, id: chainId});
+        const smartWalletConfig: GaslessWalletConfig = {apiKey};
         const loginConfig: LoginConfig = {
           domains: [window.location.origin],
           chain: {

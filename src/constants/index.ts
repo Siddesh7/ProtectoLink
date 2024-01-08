@@ -2,18 +2,39 @@ export const RebalancerFactoryABI = [
   {
     inputs: [
       {
-        internalType: "contract LinkTokenInterface",
-        name: "link",
-        type: "address",
-      },
-      {
-        internalType: "contract KeeperRegistrarInterface",
-        name: "registrar",
+        internalType: "address",
+        name: "_automate",
         type: "address",
       },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "bytes32",
+        name: "taskId",
+        type: "bytes32",
+      },
+    ],
+    name: "TaskCreated",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "automate",
+    outputs: [
+      {
+        internalType: "contract IAutomate",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
@@ -83,6 +104,39 @@ export const RebalancerFactoryABI = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "dedicatedMsgSender",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "depositToGelatotreasury",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "fundsOwner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -135,32 +189,6 @@ export const RebalancerFactoryABI = [
   },
   {
     inputs: [],
-    name: "i_link",
-    outputs: [
-      {
-        internalType: "contract LinkTokenInterface",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "i_registrar",
-    outputs: [
-      {
-        internalType: "contract KeeperRegistrarInterface",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "owner",
     outputs: [
       {
@@ -173,71 +201,47 @@ export const RebalancerFactoryABI = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: "taskId",
+    outputs: [
       {
-        components: [
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "bytes",
-            name: "encryptedEmail",
-            type: "bytes",
-          },
-          {
-            internalType: "address",
-            name: "upkeepContract",
-            type: "address",
-          },
-          {
-            internalType: "uint32",
-            name: "gasLimit",
-            type: "uint32",
-          },
-          {
-            internalType: "address",
-            name: "adminAddress",
-            type: "address",
-          },
-          {
-            internalType: "bytes",
-            name: "checkData",
-            type: "bytes",
-          },
-          {
-            internalType: "bytes",
-            name: "offchainConfig",
-            type: "bytes",
-          },
-          {
-            internalType: "uint96",
-            name: "amount",
-            type: "uint96",
-          },
-        ],
-        internalType: "struct RegistrationParams",
-        name: "params",
-        type: "tuple",
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
       },
     ],
-    name: "registerAndPredictID",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
-    name: "totalVaults",
+    name: "taskTreasury",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "contract ITaskTreasuryUpgradable",
         name: "",
-        type: "uint256",
+        type: "address",
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+    ],
+    name: "withdrawFunds",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -246,22 +250,6 @@ export const RebalancerFactoryABI = [
   },
 ];
 export const SIPFactoryABI = [
-  {
-    inputs: [
-      {
-        internalType: "contract LinkTokenInterface",
-        name: "link",
-        type: "address",
-      },
-      {
-        internalType: "contract KeeperRegistrarInterface",
-        name: "registrar",
-        type: "address",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
   {
     inputs: [
       {
@@ -302,6 +290,109 @@ export const SIPFactoryABI = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "depositToGelatotreasury",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_automate",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "bytes32",
+        name: "taskId",
+        type: "bytes32",
+      },
+    ],
+    name: "TaskCreated",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+    ],
+    name: "withdrawFunds",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
+  },
+  {
+    inputs: [],
+    name: "automate",
+    outputs: [
+      {
+        internalType: "contract IAutomate",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "contractsByUser",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "dedicatedMsgSender",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -322,12 +413,12 @@ export const SIPFactoryABI = [
   },
   {
     inputs: [],
-    name: "getDeployedSIPContracts",
+    name: "fundsOwner",
     outputs: [
       {
-        internalType: "address[]",
+        internalType: "address",
         name: "",
-        type: "address[]",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -341,7 +432,7 @@ export const SIPFactoryABI = [
         type: "address",
       },
     ],
-    name: "getUserDeployedContracts",
+    name: "getContractDeployedByUser",
     outputs: [
       {
         internalType: "address[]",
@@ -354,12 +445,12 @@ export const SIPFactoryABI = [
   },
   {
     inputs: [],
-    name: "i_link",
+    name: "getDeployedSIPContracts",
     outputs: [
       {
-        internalType: "contract LinkTokenInterface",
+        internalType: "address[]",
         name: "",
-        type: "address",
+        type: "address[]",
       },
     ],
     stateMutability: "view",
@@ -367,12 +458,12 @@ export const SIPFactoryABI = [
   },
   {
     inputs: [],
-    name: "i_registrar",
+    name: "taskId",
     outputs: [
       {
-        internalType: "contract KeeperRegistrarInterface",
+        internalType: "bytes32",
         name: "",
-        type: "address",
+        type: "bytes32",
       },
     ],
     stateMutability: "view",
@@ -380,70 +471,15 @@ export const SIPFactoryABI = [
   },
   {
     inputs: [],
-    name: "owner",
+    name: "taskTreasury",
     outputs: [
       {
-        internalType: "address",
+        internalType: "contract ITaskTreasuryUpgradable",
         name: "",
         type: "address",
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "bytes",
-            name: "encryptedEmail",
-            type: "bytes",
-          },
-          {
-            internalType: "address",
-            name: "upkeepContract",
-            type: "address",
-          },
-          {
-            internalType: "uint32",
-            name: "gasLimit",
-            type: "uint32",
-          },
-          {
-            internalType: "address",
-            name: "adminAddress",
-            type: "address",
-          },
-          {
-            internalType: "bytes",
-            name: "checkData",
-            type: "bytes",
-          },
-          {
-            internalType: "bytes",
-            name: "offchainConfig",
-            type: "bytes",
-          },
-          {
-            internalType: "uint96",
-            name: "amount",
-            type: "uint96",
-          },
-        ],
-        internalType: "struct RegistrationParams",
-        name: "params",
-        type: "tuple",
-      },
-    ],
-    name: "registerAndPredictID",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -458,47 +494,6 @@ export const SIPFactoryABI = [
     ],
     stateMutability: "view",
     type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalSIPs",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "userDeployedContracts",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    stateMutability: "payable",
-    type: "receive",
   },
 ];
 
@@ -911,180 +906,178 @@ export const socketABI = [
 export const cfaABI = [
   {
     inputs: [
-      { internalType: "contract ISuperfluid", name: "host", type: "address" },
+      {internalType: "contract ISuperfluid", name: "host", type: "address"},
     ],
     stateMutability: "nonpayable",
     type: "constructor",
   },
-  { inputs: [], name: "CFA_FWD_INVALID_FLOW_RATE", type: "error" },
+  {inputs: [], name: "CFA_FWD_INVALID_FLOW_RATE", type: "error"},
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "sender", type: "address" },
-      { internalType: "address", name: "receiver", type: "address" },
-      { internalType: "int96", name: "flowrate", type: "int96" },
-      { internalType: "bytes", name: "userData", type: "bytes" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "sender", type: "address"},
+      {internalType: "address", name: "receiver", type: "address"},
+      {internalType: "int96", name: "flowrate", type: "int96"},
+      {internalType: "bytes", name: "userData", type: "bytes"},
     ],
     name: "createFlow",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [{internalType: "bool", name: "", type: "bool"}],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "sender", type: "address" },
-      { internalType: "address", name: "receiver", type: "address" },
-      { internalType: "bytes", name: "userData", type: "bytes" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "sender", type: "address"},
+      {internalType: "address", name: "receiver", type: "address"},
+      {internalType: "bytes", name: "userData", type: "bytes"},
     ],
     name: "deleteFlow",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [{internalType: "bool", name: "", type: "bool"}],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "account", type: "address" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "account", type: "address"},
     ],
     name: "getAccountFlowInfo",
     outputs: [
-      { internalType: "uint256", name: "lastUpdated", type: "uint256" },
-      { internalType: "int96", name: "flowrate", type: "int96" },
-      { internalType: "uint256", name: "deposit", type: "uint256" },
-      { internalType: "uint256", name: "owedDeposit", type: "uint256" },
+      {internalType: "uint256", name: "lastUpdated", type: "uint256"},
+      {internalType: "int96", name: "flowrate", type: "int96"},
+      {internalType: "uint256", name: "deposit", type: "uint256"},
+      {internalType: "uint256", name: "owedDeposit", type: "uint256"},
     ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "account", type: "address" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "account", type: "address"},
     ],
     name: "getAccountFlowrate",
-    outputs: [{ internalType: "int96", name: "flowrate", type: "int96" }],
+    outputs: [{internalType: "int96", name: "flowrate", type: "int96"}],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "int96", name: "flowrate", type: "int96" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "int96", name: "flowrate", type: "int96"},
     ],
     name: "getBufferAmountByFlowrate",
-    outputs: [
-      { internalType: "uint256", name: "bufferAmount", type: "uint256" },
-    ],
+    outputs: [{internalType: "uint256", name: "bufferAmount", type: "uint256"}],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "sender", type: "address" },
-      { internalType: "address", name: "receiver", type: "address" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "sender", type: "address"},
+      {internalType: "address", name: "receiver", type: "address"},
     ],
     name: "getFlowInfo",
     outputs: [
-      { internalType: "uint256", name: "lastUpdated", type: "uint256" },
-      { internalType: "int96", name: "flowrate", type: "int96" },
-      { internalType: "uint256", name: "deposit", type: "uint256" },
-      { internalType: "uint256", name: "owedDeposit", type: "uint256" },
+      {internalType: "uint256", name: "lastUpdated", type: "uint256"},
+      {internalType: "int96", name: "flowrate", type: "int96"},
+      {internalType: "uint256", name: "deposit", type: "uint256"},
+      {internalType: "uint256", name: "owedDeposit", type: "uint256"},
     ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "sender", type: "address" },
-      { internalType: "address", name: "flowOperator", type: "address" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "sender", type: "address"},
+      {internalType: "address", name: "flowOperator", type: "address"},
     ],
     name: "getFlowOperatorPermissions",
     outputs: [
-      { internalType: "uint8", name: "permissions", type: "uint8" },
-      { internalType: "int96", name: "flowrateAllowance", type: "int96" },
+      {internalType: "uint8", name: "permissions", type: "uint8"},
+      {internalType: "int96", name: "flowrateAllowance", type: "int96"},
     ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "sender", type: "address" },
-      { internalType: "address", name: "receiver", type: "address" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "sender", type: "address"},
+      {internalType: "address", name: "receiver", type: "address"},
     ],
     name: "getFlowrate",
-    outputs: [{ internalType: "int96", name: "flowrate", type: "int96" }],
+    outputs: [{internalType: "int96", name: "flowrate", type: "int96"}],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "flowOperator", type: "address" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "flowOperator", type: "address"},
     ],
     name: "grantPermissions",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [{internalType: "bool", name: "", type: "bool"}],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "flowOperator", type: "address" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "flowOperator", type: "address"},
     ],
     name: "revokePermissions",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [{internalType: "bool", name: "", type: "bool"}],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "receiver", type: "address" },
-      { internalType: "int96", name: "flowrate", type: "int96" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "receiver", type: "address"},
+      {internalType: "int96", name: "flowrate", type: "int96"},
     ],
     name: "setFlowrate",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [{internalType: "bool", name: "", type: "bool"}],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "sender", type: "address" },
-      { internalType: "address", name: "receiver", type: "address" },
-      { internalType: "int96", name: "flowrate", type: "int96" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "sender", type: "address"},
+      {internalType: "address", name: "receiver", type: "address"},
+      {internalType: "int96", name: "flowrate", type: "int96"},
     ],
     name: "setFlowrateFrom",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [{internalType: "bool", name: "", type: "bool"}],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "sender", type: "address" },
-      { internalType: "address", name: "receiver", type: "address" },
-      { internalType: "int96", name: "flowrate", type: "int96" },
-      { internalType: "bytes", name: "userData", type: "bytes" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "sender", type: "address"},
+      {internalType: "address", name: "receiver", type: "address"},
+      {internalType: "int96", name: "flowrate", type: "int96"},
+      {internalType: "bytes", name: "userData", type: "bytes"},
     ],
     name: "updateFlow",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [{internalType: "bool", name: "", type: "bool"}],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "contract ISuperToken", name: "token", type: "address" },
-      { internalType: "address", name: "flowOperator", type: "address" },
-      { internalType: "uint8", name: "permissions", type: "uint8" },
-      { internalType: "int96", name: "flowrateAllowance", type: "int96" },
+      {internalType: "contract ISuperToken", name: "token", type: "address"},
+      {internalType: "address", name: "flowOperator", type: "address"},
+      {internalType: "uint8", name: "permissions", type: "uint8"},
+      {internalType: "int96", name: "flowrateAllowance", type: "int96"},
     ],
     name: "updateFlowOperatorPermissions",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [{internalType: "bool", name: "", type: "bool"}],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -1452,344 +1445,344 @@ export const insuranceDeployerABI = [
     type: "function",
   },
 ];
-export const insuranceBond=[
-	{
-		"inputs": [
-			{
-				"internalType": "int256",
-				"name": "_threshold",
-				"type": "int256"
-			},
-			{
-				"internalType": "contract ISuperToken",
-				"name": "_token",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "assetInsured",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_insuredAmt",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "_tokenAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "int96",
-				"name": "_flowRate",
-				"type": "int96"
-			},
-			{
-				"internalType": "address",
-				"name": "_insurer",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "fallback"
-	},
-	{
-		"inputs": [],
-		"name": "assetHeld",
-		"outputs": [
-			{
-				"internalType": "contract IERC20",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "assetHeldAddress",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "buyInsurance",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "buyer",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes",
-				"name": "",
-				"type": "bytes"
-			}
-		],
-		"name": "checkUpkeep",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "upkeepNeeded",
-				"type": "bool"
-			},
-			{
-				"internalType": "bytes",
-				"name": "",
-				"type": "bytes"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "depositInsuredAmount",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "flowRate",
-		"outputs": [
-			{
-				"internalType": "int96",
-				"name": "",
-				"type": "int96"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getInsuranceData",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "insurer",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "buyer",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "insuredAmmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "assetHeld",
-						"type": "address"
-					},
-					{
-						"internalType": "int96",
-						"name": "flowRate",
-						"type": "int96"
-					},
-					{
-						"internalType": "int256",
-						"name": "threshold",
-						"type": "int256"
-					}
-				],
-				"internalType": "struct InsuranceBond.insuranceData",
-				"name": "",
-				"type": "tuple"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getLatestPrice",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "hasPurchased",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "insuredAmmount",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "insurer",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "myInsuranceData",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "insurer",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "buyer",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "insuredAmmount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "assetHeld",
-				"type": "address"
-			},
-			{
-				"internalType": "int96",
-				"name": "flowRate",
-				"type": "int96"
-			},
-			{
-				"internalType": "int256",
-				"name": "threshold",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes",
-				"name": "",
-				"type": "bytes"
-			}
-		],
-		"name": "performUpkeep",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "priceOfInsuredAsset",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "status",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "threshold",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "token",
-		"outputs": [
-			{
-				"internalType": "contract ISuperToken",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "receive"
-	}
-]
+export const insuranceBond = [
+  {
+    inputs: [
+      {
+        internalType: "int256",
+        name: "_threshold",
+        type: "int256",
+      },
+      {
+        internalType: "contract ISuperToken",
+        name: "_token",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "assetInsured",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_insuredAmt",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_tokenAddress",
+        type: "address",
+      },
+      {
+        internalType: "int96",
+        name: "_flowRate",
+        type: "int96",
+      },
+      {
+        internalType: "address",
+        name: "_insurer",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    stateMutability: "payable",
+    type: "fallback",
+  },
+  {
+    inputs: [],
+    name: "assetHeld",
+    outputs: [
+      {
+        internalType: "contract IERC20",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "assetHeldAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "buyInsurance",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "buyer",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes",
+        name: "",
+        type: "bytes",
+      },
+    ],
+    name: "checkUpkeep",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "upkeepNeeded",
+        type: "bool",
+      },
+      {
+        internalType: "bytes",
+        name: "",
+        type: "bytes",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "depositInsuredAmount",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "flowRate",
+    outputs: [
+      {
+        internalType: "int96",
+        name: "",
+        type: "int96",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getInsuranceData",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "insurer",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "buyer",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "insuredAmmount",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "assetHeld",
+            type: "address",
+          },
+          {
+            internalType: "int96",
+            name: "flowRate",
+            type: "int96",
+          },
+          {
+            internalType: "int256",
+            name: "threshold",
+            type: "int256",
+          },
+        ],
+        internalType: "struct InsuranceBond.insuranceData",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getLatestPrice",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "",
+        type: "int256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "hasPurchased",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "insuredAmmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "insurer",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "myInsuranceData",
+    outputs: [
+      {
+        internalType: "address",
+        name: "insurer",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "buyer",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "insuredAmmount",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "assetHeld",
+        type: "address",
+      },
+      {
+        internalType: "int96",
+        name: "flowRate",
+        type: "int96",
+      },
+      {
+        internalType: "int256",
+        name: "threshold",
+        type: "int256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes",
+        name: "",
+        type: "bytes",
+      },
+    ],
+    name: "performUpkeep",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "priceOfInsuredAsset",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "",
+        type: "int256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "status",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "threshold",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "",
+        type: "int256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "token",
+    outputs: [
+      {
+        internalType: "contract ISuperToken",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
+  },
+];

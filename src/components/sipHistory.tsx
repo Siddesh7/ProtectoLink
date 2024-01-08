@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { ethers } from "ethers";
-import { getChainConfig } from "../utils";
-import { SIPFactoryABI } from "../constants";
+import React, {useEffect, useState} from "react";
+import {ethers} from "ethers";
+import {getChainConfig} from "../utils";
+import {SIPFactoryABI} from "../constants";
 
 interface SIPHistoryProps {
   user: string;
 }
 
-const SIPHistory: React.FC<SIPHistoryProps> = ({ user }) => {
+const SIPHistory: React.FC<SIPHistoryProps> = ({user}) => {
   const [transactions, setTransactions] = useState<any[]>([]);
-
+  console.log(user);
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -23,8 +23,9 @@ const SIPHistory: React.FC<SIPHistoryProps> = ({ user }) => {
           SIPFactoryABI,
           provider
         );
+        console.log(sip);
 
-        const response = await sip.getUserDeployedContracts(user);
+        const response = await sip.getContractDeployedByUser(user);
         setTransactions(response);
         console.log(response);
       } catch (error) {

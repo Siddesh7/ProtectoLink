@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 
 const buyingTokens: string[] = ["Demo Token", "FUSDT"];
 const buyingTokensAddresses: string[] = [
@@ -21,7 +21,7 @@ interface Props {
 }
 const days: number[] = [1, 7, 14, 30, 60];
 
-const SIPForm: React.FC<Props> = ({ buy, loading, approve }) => {
+const SIPForm: React.FC<Props> = ({buy, loading, approve}) => {
   const [selectedBuyingToken, setSelectedBuyingToken] = useState<string>("");
   const [selectedNumberOfTokens, setSelectedNumberOfTokens] = useState<
     number | null
@@ -70,18 +70,16 @@ const SIPForm: React.FC<Props> = ({ buy, loading, approve }) => {
         selectedBuyingToken,
         selectedSellingToken,
         selectedNumberOfTokens,
-        selectedFrequency / 86400
+        10
       );
       console.log(
         selectedBuyingToken,
         selectedSellingToken,
         selectedNumberOfTokens,
-        selectedFrequency / 86400
+        10
       );
       console.log(
-        `I want to buy ${selectedBuyingToken} token for ${selectedNumberOfTokens} ${selectedSellingToken} every ${
-          selectedFrequency / 86400
-        } second`
+        `I want to buy ${selectedBuyingToken} token for ${selectedNumberOfTokens} ${selectedSellingToken} every ${10} second`
       );
     } else {
       buy(
@@ -100,7 +98,6 @@ const SIPForm: React.FC<Props> = ({ buy, loading, approve }) => {
         `I want to buy ${selectedBuyingToken} token for ${selectedNumberOfTokens} ${selectedSellingToken} every ${selectedFrequency} second`
       );
     }
-    reloadPageAfterDelay();
   };
 
   return (

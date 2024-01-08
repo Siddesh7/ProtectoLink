@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { ethers } from "ethers";
-import { getChainConfig } from "../utils";
-import { insuranceBond, insuranceDeployerABI } from "../constants";
+import React, {useEffect, useState} from "react";
+import {ethers} from "ethers";
+import {getChainConfig} from "../utils";
+import {insuranceBond, insuranceDeployerABI} from "../constants";
 
 interface InsuranceData {
   [key: string]: any;
@@ -11,7 +11,7 @@ interface Props {
   buy: (contractAddress: string) => void;
   approve: (spender: string) => void;
 }
-const InsuranceDeployed: React.FC<Props> = ({ user, buy, approve }) => {
+const InsuranceDeployed: React.FC<Props> = ({user, buy, approve}) => {
   const [transactions, setTransactions] = useState<string[]>([]);
   const [insuranceData, setInsuranceData] = useState<InsuranceData[]>([]);
 
@@ -40,12 +40,12 @@ const InsuranceDeployed: React.FC<Props> = ({ user, buy, approve }) => {
             provider
           );
           const insuranceData = await insuranceContract.getInsuranceData();
-
+          console.log(insuranceData);
           // Convert BigNumber values to normal numbers
           const convertedData = Object.entries(insuranceData).reduce(
             (acc, [key, value]) => {
               if (ethers.BigNumber.isBigNumber(value)) {
-                acc[key] = value.toNumber();
+                acc[key] = value.toString();
               } else {
                 acc[key] = value;
               }
