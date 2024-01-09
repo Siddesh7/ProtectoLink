@@ -1,27 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+import "./AutomateTaskCreator.sol";
 import "./socket.sol";
-import {LinkTokenInterface} from "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
-struct RegistrationParams {
-    string name;
-    bytes encryptedEmail;
-    address upkeepContract;
-    uint32 gasLimit;
-    address adminAddress;
-    bytes checkData;
-    bytes offchainConfig;
-    uint96 amount;
-}
 
-interface KeeperRegistrarInterface {
-    function registerUpkeep(
-        RegistrationParams calldata requestParams
-    ) external returns (uint256);
-}
-contract SocketBuyerFactory   {
+contract SocketBuyerFactory is AutomateTaskCreator {
     uint256 public lastExecuted;
-  
+    bytes32 public taskId;
+
+    event TaskCreated(bytes32 taskId);
 
     struct ContractDetails {
         address contractAddress;
@@ -35,18 +22,7 @@ contract SocketBuyerFactory   {
 
     mapping(address => address[]) public userDeployedContracts;
 
-    LinkTokenInterface public immutable i_link;
-    KeeperRegistrarInterface public immutable i_registrar;
-    uint256 public totalBonds; 
-    address public owner;
-    constructor(LinkTokenInterface link, KeeperRegistrarInterface registrar) {
-        i_link = link;
-        i_registrar = registrar;
-        totalBonds=0;
-        owner=msg.sender;
-    }
-
-
+    constructor(address _automate) AutomateTaskCreator(_automate, msg.sender) {}
 
     receive() external payable {}
 
@@ -74,7 +50,9 @@ contract SocketBuyerFactory   {
         return contractsByUser;
     }
 
- 
+    function depositToGelatotreasury() external payable {
+        _depositFunds(msg.value, ETH);
+    }
 
     function createTask(
         address _tokenIn,
@@ -97,35 +75,29 @@ contract SocketBuyerFactory   {
             })
         );
         userDeployedContracts[msg.sender].push(address(newContract));
-        RegistrationParams memory args;
-              address payable newContractAddress = payable(address(newContract));
-        newContractAddress.transfer(0.01 ether);
-        totalBonds++;
-         // Increment the total number of SIPs
-        args.name = string(abi.encodePacked("socket", totalBonds));  // Set args.name to "bond" followed by the totalSIPs value
-        args.encryptedEmail = "0x00";
-        args.upkeepContract = address(newContract);
-        args.gasLimit = 5000000;
-        args.adminAddress = owner;
-        args.checkData = "0x00";
-        args.offchainConfig = "0x00";
-        args.amount = 1000000000000000000;
 
-        registerAndPredictID(args);
+        ModuleData memory moduleData = ModuleData({
+            modules: new Module[](2),
+            args: new bytes[](2)
+        });
 
-     
-    }
+        moduleData.modules[0] = Module.RESOLVER;
+        moduleData.modules[1] = Module.PROXY;
 
-    function registerAndPredictID(RegistrationParams memory params) public {
-        // LINK must be approved for transfer - this can be done every time or once
-        // with an infinite approval
-        
-        i_link.approve(address(i_registrar), params.amount);
-        uint256 upkeepID = i_registrar.registerUpkeep(params);
-        if (upkeepID != 0) {
-            // DEV - Use the upkeepID however you see fit
-        } else {
-            revert("auto-approve disabled");
-        }
+        moduleData.args[0] = _resolverModuleArg(
+            address(newContract),
+            abi.encodeCall(newContract.checker, ())
+        );
+        moduleData.args[1] = _proxyModuleArg();
+
+        bytes32 id = _createTask(
+            address(newContract),
+            abi.encode(newContract.buyImmediately.selector),
+            moduleData,
+            address(0)
+        );
+
+        taskId = id;
+        emit TaskCreated(id);
     }
 }

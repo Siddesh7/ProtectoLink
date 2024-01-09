@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { ethers } from "ethers";
-import { getChainConfig } from "../utils";
-import { SocketFactoryABI } from "../constants";
+import React, {useEffect, useState} from "react";
+import {ethers} from "ethers";
+import {getChainConfig} from "../utils";
+import {SocketFactoryABI} from "../constants";
+import getTokenName from "../utils/getTokenName";
 
 interface SocketHistoryProps {
   user: string;
   approve: (tokenAddress: string, contractAddress: string) => void;
 }
 
-const SocketHistory: React.FC<SocketHistoryProps> = ({ user, approve }) => {
+const SocketHistory: React.FC<SocketHistoryProps> = ({user, approve}) => {
   const [transactions, setTransactions] = useState<any[]>([]);
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const SocketHistory: React.FC<SocketHistoryProps> = ({ user, approve }) => {
         );
 
         const response = await socketFactory.getContractsByUser(user);
+        console.log(response);
         setTransactions(response);
       } catch (error) {
         console.error("Error fetching transactions:", error);
@@ -51,6 +53,7 @@ const SocketHistory: React.FC<SocketHistoryProps> = ({ user, approve }) => {
             <thead>
               <tr>
                 <th></th>
+                <th>Contract Address</th>
                 <th>Selling Token</th>
                 <th>Buying Token</th>
                 <th>Amount</th>
@@ -61,8 +64,18 @@ const SocketHistory: React.FC<SocketHistoryProps> = ({ user, approve }) => {
               {transactions.map((transaction, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{transaction[2]}</td>
-                  <td>{transaction[3]}</td>
+
+                  <td>
+                    <a
+                      href={`https://mumbai.polygonscan.com/address/${transaction[0]}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {transaction[0]}
+                    </a>
+                  </td>
+                  <td>{getTokenName(transaction[2])}</td>
+                  <td>{getTokenName(transaction[3])}</td>
                   <td>{convertBigNumberToNumber(transaction[4])}</td>
                   <td>
                     <button

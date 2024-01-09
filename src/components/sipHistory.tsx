@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {ethers} from "ethers";
 import {getChainConfig} from "../utils";
-import {SIPFactoryABI} from "../constants";
+import {SIPFactoryABI, sipABI} from "../constants";
+import getTokenName from "../utils/getTokenName";
 
 interface SIPHistoryProps {
   user: string;
@@ -9,7 +10,8 @@ interface SIPHistoryProps {
 
 const SIPHistory: React.FC<SIPHistoryProps> = ({user}) => {
   const [transactions, setTransactions] = useState<any[]>([]);
-  console.log(user);
+  const [targetTokens, setTargetTokens] = useState<any[]>([]);
+  const [spendingTokens, setSpendingTokens] = useState<any[]>([]);
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -23,11 +25,29 @@ const SIPHistory: React.FC<SIPHistoryProps> = ({user}) => {
           SIPFactoryABI,
           provider
         );
-        console.log(sip);
 
         const response = await sip.getContractDeployedByUser(user);
+
         setTransactions(response);
-        console.log(response);
+        const targetTokensDetails = response.map(async (address: string) => {
+          const contract = new ethers.Contract(address, sipABI, provider);
+
+          const contractData = await contract.targetTokenAddress();
+
+          return contractData;
+        });
+        const spendingTokensDetails = response.map(async (address: string) => {
+          const contract = new ethers.Contract(address, sipABI, provider);
+
+          const contractData = await contract.tokenAddress();
+
+          return contractData;
+        });
+        const targetTokens = await Promise.all(targetTokensDetails);
+        const spendingTokens = await Promise.all(spendingTokensDetails);
+        console.log(spendingTokens);
+        setTargetTokens(targetTokens);
+        setSpendingTokens(spendingTokens);
       } catch (error) {
         console.error("Error fetching transactions:", error);
       }
@@ -48,43 +68,26 @@ const SIPHistory: React.FC<SIPHistoryProps> = ({user}) => {
               <tr>
                 <th></th>
                 <th>Vaults</th>
+                <th>SIP on</th>
+                <th>Using</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((transaction: any, index: number) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{transaction}</td>
+                  <td>
+                    <a
+                      href={`https://mumbai.polygonscan.com/address/${transaction}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {transaction}
+                    </a>
+                  </td>
 
-                  {/* <td>
-                    <button
-                      className="btn"
-                      onClick={() => {
-                        approve(
-                          transaction.tokenAddresses,
-                          transaction.contractAddress
-                        );
-                      }}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="btn btn-primary ml-[10px]"
-                      onClick={() => {
-                        deposit(transaction.contractAddress);
-                      }}
-                    >
-                      Deposit
-                    </button>
-                    <button
-                      className="btn btn-accent ml-[10px]"
-                      onClick={() => {
-                        withdraw(transaction.contractAddress);
-                      }}
-                    >
-                      Withdraw
-                    </button>
-                  </td> */}
+                  <td>{getTokenName(targetTokens[index])}</td>
+                  <td>{getTokenName(spendingTokens[index])}</td>
                 </tr>
               ))}
             </tbody>
